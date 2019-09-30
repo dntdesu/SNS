@@ -21,11 +21,22 @@
                 android:id="@+id/all_users_post_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
+
         </FrameLayout>
 
         <include
             android:id="@+id/main_page_toolbar"
             layout="@layout/app_bar_layout" />
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bottom_navigation"
+            android:layout_alignParentBottom="true"
+            app:menu="@menu/bottom_navigation"
+            android:background="?android:attr/windowBackground" />
+
+
     </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView

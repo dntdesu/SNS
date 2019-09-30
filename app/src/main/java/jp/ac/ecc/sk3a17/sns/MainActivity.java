@@ -12,10 +12,12 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private BottomNavigationView bottomNavigationView;
     private Toolbar toolbar;
     private ActionBarDrawerToggle actionBarDrawerToggle; //for opening navigation view when tap on icon on the appbar
     private FirebaseAuth mAuth; //for authentication
@@ -65,8 +68,13 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
 
+        //Navigation view
         View navView = navigationView.inflateHeaderView(R.layout.navigation_header); //set header for navigation view
         navProfileImage = navView.findViewById(R.id.nav_header_image);
+
+        //Bottom navigation
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+
 
         //custom toolbar and ActionBarDrawerToggle's things
         toolbar = findViewById(R.id.main_page_toolbar);
@@ -101,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        bottomNavigationView.setOnNavigationItemSelectedListener(botNavListener);
     }
 
     //It will be run after OnCreate, check if user has login or not
@@ -187,4 +196,29 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener botNavListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    Fragment selectedFragment = null;
+                    switch (menuItem.getItemId()) {
+                        case R.id.bot_home:
+                            selectedFragment = new HomeFragment();
+                            break;
+                        case R.id.bot_weight:
+                            selectedFragment = new WeightFragment();
+                            break;
+                        case R.id.bot_exercise:
+                            selectedFragment = new ExerciseFragment();
+                            break;
+                        case R.id.bot_calories:
+                            selectedFragment = new CaloriesFragment();
+                            break;
+                    }
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_container,
+                            selectedFragment).commit();
+                    return true;
+                }
+            };
 }
