@@ -180,7 +180,9 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "About", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_logout:
-                Toast.makeText(this, "Log out", Toast.LENGTH_SHORT).show();
+                mAuth.signOut();
+                mGoogleSignInClient.signOut();
+                SendToLogin();
                 break;
 
         }
