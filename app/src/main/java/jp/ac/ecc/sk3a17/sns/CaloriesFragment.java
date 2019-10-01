@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 public class CaloriesFragment extends Fragment {
     private String test;
     private String test2;
+    private String test3;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
