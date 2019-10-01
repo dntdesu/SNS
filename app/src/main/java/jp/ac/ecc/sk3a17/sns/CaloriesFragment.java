@@ -10,9 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 public class CaloriesFragment extends Fragment {
-    private String test;
-    private String test2;
-    private String test3;
+    private String test = "Generate commit";
+    private String test2 = "And push";
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
