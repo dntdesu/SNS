@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "275721214460-deoo63q1n7nmo8ies18cmdibghsg5env.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "jp.ac.ecc.sk3a17.sns",
+            "certificate_hash": "a1741d14ed06b1a91f93f9a7937a0b1a4eece008"
+          }
+        },
+        {
+          "client_id": "275721214460-8iq4do9g4b7ep0p08a25npbagi0v8m58.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "jp.ac.ecc.sk3a17.sns",
+            "certificate_hash": "9e0819450cf88177861885db4bf7b32d4ded3afd"
+          }
+        },
+        {
           "client_id": "275721214460-76o8v3153kae3jafgqime3p0qbp71bal.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
