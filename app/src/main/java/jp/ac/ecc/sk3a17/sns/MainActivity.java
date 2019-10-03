@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private CircleImageView navProfileImage;
     private String currentUserID = null;
+    private ImageButton addNewPost;
 
 
     @Override
@@ -62,9 +64,11 @@ public class MainActivity extends AppCompatActivity {
 
         navigationView = findViewById(R.id.navigation_view);
         drawerLayout = findViewById(R.id.drawable_layout);
+        addNewPost = findViewById(R.id.main_add_new_post);
 
         //Create a node named Users on database
         userRef = FirebaseDatabase.getInstance().getReference().child("Users");
+
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
 
@@ -110,6 +114,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         bottomNavigationView.setOnNavigationItemSelectedListener(botNavListener);
+        addNewPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendToPost();
+            }
+        });
+    }
+
+    private void SendToPost() {
+        Intent postIntent = new Intent(MainActivity.this, PostActivity.class);
+        startActivity(postIntent);
     }
 
     //It will be run after OnCreate, check if user has login or not
