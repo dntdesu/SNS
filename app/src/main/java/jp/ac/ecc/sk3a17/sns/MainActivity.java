@@ -3,18 +3,27 @@ package jp.ac.ecc.sk3a17.sns;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -41,11 +50,12 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ActionBarDrawerToggle actionBarDrawerToggle; //for opening navigation view when tap on icon on the appbar
     private FirebaseAuth mAuth; //for authentication
-    private DatabaseReference userRef; //for connecting to real time database
+    private DatabaseReference userRef, postRef; //for connecting to real time database
     private GoogleSignInClient mGoogleSignInClient;
     private CircleImageView navProfileImage;
     private String currentUserID = null;
     private ImageButton addNewPost;
+    private RecyclerView postList;
 
 
     @Override
@@ -65,9 +75,11 @@ public class MainActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.navigation_view);
         drawerLayout = findViewById(R.id.drawable_layout);
         addNewPost = findViewById(R.id.main_add_new_post);
+        postList = findViewById(R.id.all_users_post_list);
 
         //Create a node named Users on database
         userRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        postRef = FirebaseDatabase.getInstance().getReference().child("Posts");
 
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
@@ -94,8 +106,8 @@ public class MainActivity extends AppCompatActivity {
         userRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists() && dataSnapshot.hasChild("Profile Images")) {
-                    String image = dataSnapshot.child("Profile Images").getValue().toString();
+                if (dataSnapshot.exists() && dataSnapshot.hasChild("profileImage")) {
+                    String image = dataSnapshot.child("profileImage").getValue().toString();
                     Picasso.get().load(image).into(navProfileImage);
                 }
             }
@@ -120,6 +132,63 @@ public class MainActivity extends AppCompatActivity {
                 SendToPost();
             }
         });
+        //To display posts, need to have a recycler view, and a Firebase Recycler Adapter
+        DisplayAllUsersPost();
+
+
+        // Post list setup
+        postList.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        postList.setLayoutManager(linearLayoutManager);
+    }
+
+    private void DisplayAllUsersPost() {
+        //using Firebase Recycler Adapter to retrieve all the posts
+        //Firebase Recycler Adapter needs a module class and a static class
+
+        FirebaseRecyclerOptions<Posts> options = new FirebaseRecyclerOptions.Builder<Posts>()
+                .setQuery(postRef,Posts.class)
+                .build();
+        FirebaseRecyclerAdapter<Posts,PostViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Posts, PostViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull PostViewHolder holder, int position, @NonNull Posts model) {
+                holder.userName.setText(model.getFullName());
+                holder.postDate.setText(model.getDate() + " ");
+                holder.postTime.setText(model.getTime());
+                holder.description.setText(model.getDescription());
+                Picasso.get().load(model.getProfileImage()).into(holder.avatar);
+                Picasso.get().load(model.getPostImage()).into(holder.postImage);
+            }
+
+            @NonNull
+            @Override
+            public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.all_posts_layout, parent, false);
+                PostViewHolder postViewHolder = new PostViewHolder(view);
+                return postViewHolder;
+            }
+        };
+        postList.setAdapter(firebaseRecyclerAdapter);
+        firebaseRecyclerAdapter.startListening();
+
+    }
+    public static class PostViewHolder extends RecyclerView.ViewHolder{
+        TextView userName, postDate, postTime, description;
+        ImageView postImage, avatar;
+
+        View mView;
+        public PostViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mView = itemView;
+            userName = mView.findViewById(R.id.postLayout_name);
+            postDate = mView.findViewById(R.id.postLayout_date);
+            postTime = mView.findViewById(R.id.postLayout_time);
+            description = mView.findViewById(R.id.postLayout_post_description);
+            avatar = mView.findViewById(R.id.postLayout_avatar);
+            postImage = mView.findViewById(R.id.postLayout_image);
+        }
     }
 
     private void SendToPost() {
