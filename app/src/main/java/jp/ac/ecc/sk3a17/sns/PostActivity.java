@@ -1,10 +1,5 @@
 package jp.ac.ecc.sk3a17.sns;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,9 +8,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -47,6 +46,7 @@ public class PostActivity extends AppCompatActivity {
     private DatabaseReference userRef, postRef;
     private StorageReference postImageRef; //to save profile image to storage
     private ProgressDialog loadingBar;
+    private long postCounter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,23 +111,26 @@ public class PostActivity extends AppCompatActivity {
     private void StoringImageToFirebase() {
 
         Calendar calFordDate = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-yyyy");
+        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MM-yyyy");
         SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
         saveCurrentDate = currentDate.format(calFordDate.getTime());
         saveCurrentTime = currentTime.format(calFordDate.getTime());
         //generate random name using posted date and time
         postRandomName = saveCurrentDate + saveCurrentTime;
         //create a folder to save posted images
-        StorageReference filePath = postImageRef.child("Posted Images").child(imageUri.getLastPathSegment() + postRandomName + ".jpg");
+        final StorageReference filePath = postImageRef.child("Posted Images").child(imageUri.getLastPathSegment() + postRandomName + ".jpg");
         //save image to database
         filePath.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 if (task.isSuccessful()) {
-                    downloadUri = task.getResult().getStorage().getDownloadUrl().toString();
-                    SavePost();
-                } else {
-                    Toast.makeText(PostActivity.this, "Oops...something went wrong", Toast.LENGTH_SHORT).show();
+                    filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            downloadUri = uri.toString();
+                            SavePost();
+                        }
+                    });
                 }
             }
         });
@@ -137,26 +140,42 @@ public class PostActivity extends AppCompatActivity {
 
     private void SavePost() {
         //retrieve user's full name and avatar for adding to Post node will be generated later
+        postRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    postCounter = dataSnapshot.getChildrenCount();
+                } else {
+                    postCounter = 0;
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         userRef.child(currentUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    String fullName = dataSnapshot.child("Full Name").getValue().toString();
-                    String avatar = dataSnapshot.child("Profile Images").getValue().toString();
+                    String fullName = dataSnapshot.child("fullName").getValue().toString();
+                    String avatar = dataSnapshot.child("profileImage").getValue().toString();
 
                     HashMap postMap = new HashMap();
                     postMap.put("uid", currentUserId);
                     postMap.put("date", saveCurrentDate);
                     postMap.put("time", saveCurrentTime);
                     postMap.put("description", validationDescription);
-                    postMap.put("post image", downloadUri);
-                    postMap.put("profile image", avatar);
-                    postMap.put("full name", fullName);
+                    postMap.put("postImage", downloadUri);
+                    postMap.put("profileImage", avatar);
+                    postMap.put("fullName", fullName);
+                    postMap.put("postCounter", postCounter);
                     postRef.child(currentUserId + postRandomName).updateChildren(postMap).addOnCompleteListener(new OnCompleteListener() {
                         @Override
                         public void onComplete(@NonNull Task task) {
                             if (task.isSuccessful()){
-                                Toast.makeText(PostActivity.this, "Posted", Toast.LENGTH_SHORT).show();
                                 SendToMain();
                                 loadingBar.dismiss();
                             }else{

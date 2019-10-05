@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ClickedPostActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/clicked_post_description"
+        android:textSize="14sp"
+        android:padding="5dp"
+        android:text="description" />
+
+    <ImageView
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:id="@+id/clicked_post_image"
+        android:layout_below="@+id/clicked_post_description"
+        android:scaleType="fitCenter" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/clicked_post_image">
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:id="@+id/clicked_post_edit"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="50dp"
+            android:text="Edit post"
+            android:background="@drawable/button"
+            android:textColor="@color/cardview_light_background"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/clicked_post_delete"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="50dp"
+            android:background="@drawable/button"
+            android:text="Delete post"
+            android:textAllCaps="false"
+            android:layout_centerVertical="true"
+            android:textColor="@color/cardview_light_background" />
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
