@@ -14,7 +14,7 @@ import jp.ac.ecc.sk3a17.sns.R;
  * A simple {@link Fragment} subclass.
  */
 public class CaloriesFragment extends Fragment {
-
+sdgsdgdg
 
     public CaloriesFragment() {
         // Required empty public constructor
