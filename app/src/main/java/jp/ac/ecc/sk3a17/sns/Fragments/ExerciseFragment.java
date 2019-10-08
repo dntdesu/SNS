@@ -14,6 +14,7 @@ import jp.ac.ecc.sk3a17.sns.R;
  * A simple {@link Fragment} subclass.
  */
 public class ExerciseFragment extends Fragment {
+    private View view;
 
 
     public ExerciseFragment() {
@@ -25,7 +26,10 @@ public class ExerciseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_exercise, container, false);
+        view = inflater.inflate(R.layout.fragment_exercise, container, false);
+
+
+        return view;
     }
 
 }
