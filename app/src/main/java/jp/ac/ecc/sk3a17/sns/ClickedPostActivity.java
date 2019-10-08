@@ -1,6 +1,8 @@
 package jp.ac.ecc.sk3a17.sns;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,12 +20,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 public class ClickedPostActivity extends AppCompatActivity {
-    private Button editButton, deleteButton;
+    private Button deleteButton;
     private TextView postDescription;
     private ImageView postImage;
     private String postKey;
     private FirebaseAuth mAuth; //for authentication
-    private DatabaseReference userRef, postRef;
+    private DatabaseReference postRef;
     private String currentUserID;
 
     @Override
@@ -31,18 +33,15 @@ public class ClickedPostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clicked_post);
 
-        editButton = findViewById(R.id.clicked_post_edit);
         deleteButton = findViewById(R.id.clicked_post_delete);
         postDescription = findViewById(R.id.clicked_post_description);
         postImage = findViewById(R.id.clicked_post_image);
         //set edit and delete button invisible as default
-        editButton.setVisibility(View.INVISIBLE);
         deleteButton.setVisibility(View.INVISIBLE);
 
         postKey = getIntent().getStringExtra("PostKey");
 
         //Create reference to Users and Posts node
-        userRef = FirebaseDatabase.getInstance().getReference().child("Users");
         postRef = FirebaseDatabase.getInstance().getReference().child("Posts");
 
         mAuth = FirebaseAuth.getInstance();
@@ -51,16 +50,19 @@ public class ClickedPostActivity extends AppCompatActivity {
         postRef.child(postKey).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String description = dataSnapshot.child("description").getValue().toString();
-                String image = dataSnapshot.child("postImage").getValue().toString();
-                String uid = dataSnapshot.child("uid").getValue().toString();
-                //if this post belong to current user then allow to edit or delete post
-                if (currentUserID.equals(uid)) {
-                    editButton.setVisibility(View.VISIBLE);
-                    deleteButton.setVisibility(View.VISIBLE);
+                if (dataSnapshot.exists()) {
+                    String description = dataSnapshot.child("description").getValue().toString();
+                    String image = dataSnapshot.child("postImage").getValue().toString();
+                    String uid = dataSnapshot.child("uid").getValue().toString();
+                    //if this post belong to current user then allow to edit or delete post
+                    if (currentUserID.equals(uid)) {
+                        deleteButton.setVisibility(View.VISIBLE);
+                    } else {
+                        postDescription.setInputType(InputType.TYPE_NULL);
+                    }
+                    postDescription.setText(description);
+                    Picasso.get().load(image).into(postImage);
                 }
-                postDescription.setText(description);
-                Picasso.get().load(image).into(postImage);
             }
 
             @Override
@@ -69,5 +71,22 @@ public class ClickedPostActivity extends AppCompatActivity {
             }
         });
 
+        //Delete button click event
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //remove post from real time database but posted image's still in storage
+                postRef.child(postKey).removeValue();
+                SendToMain();
+            }
+        });
+
+    }
+
+    private void SendToMain() {
+        Intent mainIntent = new Intent(ClickedPostActivity.this, MainActivity.class);
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(mainIntent);
+        finish();
     }
 }
