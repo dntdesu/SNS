@@ -22,10 +22,6 @@
             android:layout_below="@+id/main_page_toolbar"
             android:layout_above="@+id/bottom_navigation">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/all_users_post_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
 
         </FrameLayout>
         <ImageButton
