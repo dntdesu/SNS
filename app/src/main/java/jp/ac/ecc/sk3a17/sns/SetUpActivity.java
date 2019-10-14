@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,14 +39,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class SetUpActivity extends AppCompatActivity {
 
     private Button btn_save;
-    private EditText userName, fullName;
+    private EditText userName, fullName, high, weight;
     private CircleImageView profileImage;
     private FirebaseAuth mAuth;
     private DatabaseReference userRef;
     private StorageReference userProfileImageRef; //to save profile image to storage
-    private String currentUserId;
+    private String currentUserId, gender;
     private ProgressDialog loadingBar;
     final static int galleryPick = 1;
+    private RadioGroup radioGroup;
+    private RadioButton rdMan, rdWoman, rdUnknown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +58,14 @@ public class SetUpActivity extends AppCompatActivity {
         btn_save = findViewById(R.id.setup_save);
         userName = findViewById(R.id.setup_username);
         fullName = findViewById(R.id.setup_full_name);
+        high = findViewById(R.id.setup_high);
+        weight = findViewById(R.id.setup_weight);
         profileImage = findViewById(R.id.setup_profile_image);
         loadingBar = new ProgressDialog(this);
+        radioGroup = findViewById(R.id.setup_gender_group);
+        rdMan = findViewById(R.id.setup_man);
+        rdWoman = findViewById(R.id.setup_woman);
+        rdUnknown = findViewById(R.id.setup_unknown);
 
         mAuth = FirebaseAuth.getInstance();
         //get current useID through mAuth
@@ -100,6 +110,26 @@ public class SetUpActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+
+        //Radio group click event
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    //get value of checked item then
+                    case R.id.setup_man:
+                        gender = rdMan.getText().toString();
+                        break;
+                    case R.id.setup_woman:
+                        gender = rdWoman.getText().toString();
+                        break;
+                    case R.id.setup_unknown:
+                        gender = rdUnknown.getText().toString();
+                        break;
+
+                }
             }
         });
     }
@@ -164,19 +194,29 @@ public class SetUpActivity extends AppCompatActivity {
         //check if has any field is empty
         String mapUserName = userName.getText().toString();
         String mapFullName = fullName.getText().toString();
-        if (TextUtils.isEmpty(mapFullName) || TextUtils.isEmpty(mapUserName)) {
+        String mapHigh = high.getText().toString();
+        String mapWeight = weight.getText().toString();
+        if (TextUtils.isEmpty(mapFullName) || TextUtils.isEmpty(mapUserName)
+                || TextUtils.isEmpty(mapHigh) || TextUtils.isEmpty(mapWeight)) {
             Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
+        } else if (Double.parseDouble(mapHigh) < 100 || Double.parseDouble(mapHigh) > 200) {
+            high.setError("身長を正しく入力してください");
+            high.requestFocus();
+        } else if (Double.parseDouble(mapWeight) < 20 || Double.parseDouble(mapWeight) > 150) {
+            weight.setError("体重を正しく入力してください");
+            weight.requestFocus();
         } else {
-
             loadingBar.setTitle("Updating");
             loadingBar.setMessage("Please wait a moment");
             loadingBar.show();
             loadingBar.setCanceledOnTouchOutside(true);
 
             HashMap userMap = new HashMap();
-            userMap.put("User Name", mapUserName);
-            userMap.put("Full Name", mapFullName);
-            userMap.put("Gender", "none");
+            userMap.put("userName", mapUserName);
+            userMap.put("fullName", mapFullName);
+            userMap.put("gender", gender);
+            userMap.put("high", mapHigh);
+            userMap.put("weight", mapWeight);
 
             userRef.updateChildren(userMap).addOnCompleteListener(new OnCompleteListener() {
                 @Override

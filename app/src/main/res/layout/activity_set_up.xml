@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/header"
     tools:context=".SetUpActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true">
+        android:layout_height="350dp"
+        android:background="@drawable/header"
+        android:id="@+id/rel1">
 
         <EditText
             android:id="@+id/setup_username"
@@ -23,9 +23,9 @@
             android:drawableStart="@drawable/username"
             android:hint="Enter your user name"
             android:inputType="text"
+            android:nextFocusDown="@id/setup_high"
             android:padding="5dp"
-            android:textAlignment="center"
-            android:nextFocusDown="@id/setup_full_name" />
+            android:textAlignment="center" />
 
         <EditText
             android:id="@+id/setup_full_name"
@@ -38,9 +38,9 @@
             android:drawableStart="@drawable/name"
             android:hint="Enter your full name"
             android:inputType="text"
+            android:nextFocusDown="@id/setup_save"
             android:padding="5dp"
-            android:textAlignment="center"
-            android:nextFocusDown="@id/setup_save" />
+            android:textAlignment="center" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/setup_profile_image"
@@ -52,14 +52,124 @@
             app:civ_border_color="@color/cardview_light_background"
             app:civ_border_width="3dp" />
 
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rel1"
+        android:background="@color/cardview_light_background">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="性別"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                android:id="@+id/setup_gender_label"
+                android:layout_marginStart="30dp" />
+
+            <RadioGroup
+                android:id="@+id/setup_gender_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/setup_gender_label"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="男性"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorPrimary"
+                    android:id="@+id/setup_man"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="女性"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorPrimary"
+                    android:id="@+id/setup_woman" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Unknown"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorPrimary"
+                    android:id="@+id/setup_unknown" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="身長(cm)"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                android:id="@+id/setup_high_label"
+                android:layout_marginStart="50dp"
+                android:layout_toRightOf="@+id/setup_gender_label" />
+
+            <EditText
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:id="@+id/setup_high"
+                android:layout_below="@id/setup_high_label"
+                android:layout_marginStart="130dp"
+                android:layout_marginTop="20dp"
+                android:inputType="numberDecimal"
+                android:textAlignment="center"
+                android:hint="身長入力"
+                android:background="@drawable/input"
+                android:nextFocusDown="@id/setup_weight" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="体重(kg)"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                android:id="@+id/setup_weight_label"
+                android:layout_marginStart="50dp"
+                android:layout_toRightOf="@+id/setup_high_label" />
+
+            <EditText
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:id="@+id/setup_weight"
+                android:layout_below="@id/setup_high_label"
+                android:layout_marginStart="270dp"
+                android:layout_marginTop="20dp"
+                android:inputType="numberDecimal"
+                android:textAlignment="center"
+                android:hint="体重入力"
+                android:background="@drawable/input"
+                android:nextFocusDown="@id/setup_save" />
+
+        </RelativeLayout>
+
+
         <Button
-            android:layout_width="100dp"
-            android:layout_height="45dp"
             android:id="@+id/setup_save"
-            android:layout_below="@+id/setup_full_name"
-            android:layout_marginTop="15dp"
-            android:layout_centerHorizontal="true"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="29dp"
             android:background="@drawable/button"
+            android:layout_centerHorizontal="true"
             android:text="Save"
             android:textAllCaps="false"
             android:textColor="@color/cardview_light_background" />
