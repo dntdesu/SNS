@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="150dp"
     android:background="@drawable/header">
@@ -13,20 +13,85 @@
         android:src="@drawable/profile"
         app:civ_border_color="@color/colorPrimaryDark"
         app:civ_border_width="2dp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="50dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="20dp"
         />
 
-<!--    <TextView-->
-<!--        android:id="@+id/nav_user_full_name"-->
-<!--        android:layout_below="@+id/nav_profile_image"-->
-<!--        android:layout_width="135dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="username"-->
-<!--        android:textSize="16sp"-->
-<!--        android:textColor="@color/cardview_light_background"-->
-<!--        android:textAlignment="center"-->
-<!--        android:layout_marginLeft="50dp"-->
-<!--        />-->
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="身長(cm)"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_weight="1"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="体重(kg)"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_weight="1"
+                    android:textAlignment="center" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/nav_high"
+                    android:text="身長"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorPrimaryDark" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/nav_weight"
+                    android:text="体重"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorPrimaryDark" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nav_bmi"
+            android:layout_gravity="center"
+            android:text="BMI : "
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_margin="20dp"
+            android:textColor="@color/cardview_light_background" />
+    </LinearLayout>
+
+</LinearLayout>

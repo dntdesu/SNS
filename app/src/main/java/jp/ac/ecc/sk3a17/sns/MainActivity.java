@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private CircleImageView navProfileImage;
     private String currentUserID;
     private ImageButton addNewPost;
+    private TextView high, weight, bmi;
 
 
     @Override
@@ -80,6 +82,10 @@ public class MainActivity extends AppCompatActivity {
         //Navigation view
         View navView = navigationView.inflateHeaderView(R.layout.navigation_header); //set header for navigation view
         navProfileImage = navView.findViewById(R.id.nav_header_image);
+        high = navView.findViewById(R.id.nav_high);
+        weight = navView.findViewById(R.id.nav_weight);
+        bmi = navView.findViewById(R.id.nav_bmi);
+
 
         //Bottom navigation
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -104,6 +110,17 @@ public class MainActivity extends AppCompatActivity {
                 if (dataSnapshot.exists() && dataSnapshot.hasChild("profileImage")) {
                     String image = dataSnapshot.child("profileImage").getValue().toString();
                     Picasso.get().load(image).into(navProfileImage);
+                }
+                if (dataSnapshot.exists() && dataSnapshot.hasChild("high") && dataSnapshot.hasChild("weight")) {
+                    String userHigh = dataSnapshot.child("high").getValue().toString();
+                    String userWeight = dataSnapshot.child("weight").getValue().toString();
+                    //BMI formula
+                    Double BMI = Double.parseDouble(userWeight) / ((Double.parseDouble(userHigh) / 100) * (Double.parseDouble(userHigh) / 100));
+                    String userBMI = String.format("%.1f", BMI);
+                    high.setText(userHigh);
+                    weight.setText(userWeight);
+                    bmi.setText("BMI : " + userBMI);
+
                 }
             }
 
