@@ -44,7 +44,7 @@ public class SetUpActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference userRef;
     private StorageReference userProfileImageRef; //to save profile image to storage
-    private String currentUserId, gender;
+    private String currentUserId, gender = "男性";
     private ProgressDialog loadingBar;
     final static int galleryPick = 1;
     private RadioGroup radioGroup;
@@ -100,8 +100,8 @@ public class SetUpActivity extends AppCompatActivity {
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists() && dataSnapshot.hasChild("Profile Images")) {
-                    String image = dataSnapshot.child("Profile Images").getValue().toString();
+                if (dataSnapshot.exists() && dataSnapshot.hasChild("profileImage")) {
+                    String image = dataSnapshot.child("profileImage").getValue().toString();
                     //use picasso to display profile image
                     Picasso.get().load(image).into(profileImage);
                 }
@@ -168,7 +168,7 @@ public class SetUpActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     final String downloadUrl = uri.toString();
-                                    userRef.child("Profile Images").setValue(downloadUrl)
+                                    userRef.child("profileImage").setValue(downloadUrl)
                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
@@ -222,7 +222,6 @@ public class SetUpActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task task) {
                     if (task.isSuccessful()) {
-                        Toast.makeText(SetUpActivity.this, "Saved", Toast.LENGTH_SHORT).show();
                         loadingBar.dismiss();
                         SendToMain();
                     } else {

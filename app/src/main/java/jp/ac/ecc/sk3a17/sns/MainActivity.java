@@ -120,13 +120,18 @@ public class MainActivity extends AppCompatActivity {
                     high.setText(userHigh);
                     weight.setText(userWeight);
                     bmi.setText("BMI : " + userBMI);
-
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+        navProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendToProfile();
             }
         });
 
@@ -197,6 +202,11 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    private void SendToProfile() {
+        Intent profileIntent = new Intent(MainActivity.this, ProfileActivity.class);
+        startActivity(profileIntent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
@@ -208,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
     private void userMenuSelector(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_profile:
-                Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
+                SendToProfile();
                 break;
             case R.id.nav_friends:
                 Toast.makeText(this, "Friends", Toast.LENGTH_SHORT).show();
