@@ -217,6 +217,7 @@ public class SetUpActivity extends AppCompatActivity {
             userMap.put("gender", gender);
             userMap.put("high", mapHigh);
             userMap.put("weight", mapWeight);
+            userMap.put("uid", currentUserId);
 
             userRef.updateChildren(userMap).addOnCompleteListener(new OnCompleteListener() {
                 @Override

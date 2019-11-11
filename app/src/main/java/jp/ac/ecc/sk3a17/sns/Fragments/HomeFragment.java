@@ -22,7 +22,7 @@ import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
 import jp.ac.ecc.sk3a17.sns.ClickedPostActivity;
-import jp.ac.ecc.sk3a17.sns.Posts;
+import jp.ac.ecc.sk3a17.sns.Model.Posts;
 import jp.ac.ecc.sk3a17.sns.R;
 
 /**
