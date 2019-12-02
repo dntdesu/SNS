@@ -13,8 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".FindFriendActivity"></activity>
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".FindFriendActivity" />
+        <activity android:name=".ProfileUpdateActivity" />
         <activity android:name=".ClickedPostActivity" />
         <activity android:name=".PostActivity" />
         <activity android:name=".SetUpActivity" />

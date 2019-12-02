@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void SendToProfile() {
-        Intent profileIntent = new Intent(MainActivity.this, ProfileActivity.class);
+        Intent profileIntent = new Intent(MainActivity.this, ProfileUpdateActivity.class);
         startActivity(profileIntent);
     }
 
