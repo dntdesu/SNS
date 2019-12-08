@@ -110,11 +110,11 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void Unfriend() {
-        friendRef.child(currentUserID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+        friendRef.child(currentUserID).child(uid).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    friendRef.child(uid).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    friendRef.child(uid).child(currentUserID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
@@ -134,11 +134,11 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void AcceptRequest() {
 
-        friendRef.child(currentUserID).setValue(uid).addOnCompleteListener(new OnCompleteListener<Void>() {
+        friendRef.child(currentUserID).child(uid).setValue("friend").addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    friendRef.child(uid).setValue(currentUserID).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    friendRef.child(uid).child(currentUserID).setValue("friend").addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
@@ -196,7 +196,7 @@ public class ProfileActivity extends AppCompatActivity {
                         });
                     }
                 } else {
-                    friendRef.child(currentUserID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    friendRef.child(currentUserID).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists() && dataSnapshot.getValue().toString().equals(uid)) {
