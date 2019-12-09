@@ -5,4 +5,19 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- 性別 -->
+    <string name="setup_text_sex">SEX</string>
+    <string name="setup_man">man</string>
+    <string name="setup_woman">woman</string>
+
+    <!-- hint -->
+    <string name="setup_age">age</string>
+    <string name="setup_weight">Enter your weight</string>
+    <string name="setup_height">Enter your height</string>
+
+    <!-- Exercise -->
+    <string name="exercise_edit_btn">運動メニュー編集</string>
+    <string name="exercise_add_btn">運動メニュー追加</string>
+
 </resources>

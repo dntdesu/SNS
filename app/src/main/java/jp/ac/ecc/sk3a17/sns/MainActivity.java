@@ -31,7 +31,7 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import jp.ac.ecc.sk3a17.sns.Fragments.CaloriesFragment;
-import jp.ac.ecc.sk3a17.sns.Fragments.ExerciseFragment;
+import jp.ac.ecc.sk3a17.sns.Exercise.ExerciseFragment;
 import jp.ac.ecc.sk3a17.sns.Fragments.HomeFragment;
 import jp.ac.ecc.sk3a17.sns.Fragments.WeightFragment;
 

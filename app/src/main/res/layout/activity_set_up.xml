@@ -7,62 +7,137 @@
     android:background="@drawable/header"
     tools:context=".SetUpActivity">
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true">
+        android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/setup_username"
-            android:layout_width="300dp"
-            android:layout_height="45dp"
-            android:layout_below="@+id/setup_profile_image"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/input"
-            android:drawableStart="@drawable/username"
-            android:hint="Enter your user name"
-            android:inputType="text"
-            android:padding="5dp"
-            android:textAlignment="center"
-            android:nextFocusDown="@id/setup_full_name" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="482dp"
+            android:layout_centerVertical="true">
 
-        <EditText
-            android:id="@+id/setup_full_name"
-            android:layout_width="300dp"
-            android:layout_height="45dp"
-            android:layout_below="@+id/setup_username"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/input"
-            android:drawableStart="@drawable/name"
-            android:hint="Enter your full name"
-            android:inputType="text"
-            android:padding="5dp"
-            android:textAlignment="center"
-            android:nextFocusDown="@id/setup_save" />
+            <Button
+                android:id="@+id/setup_save"
+                android:layout_width="100dp"
+                android:layout_height="45dp"
+                android:layout_below="@+id/setup_full_name"
+                android:layout_alignStart="@+id/setup_full_name"
+                android:layout_marginStart="100dp"
+                android:layout_marginTop="175dp"
+                android:background="@drawable/button"
+                android:text="Save"
+                android:textAllCaps="false"
+                android:textColor="@color/cardview_light_background" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/setup_profile_image"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/profile"
-            app:civ_border_color="@color/cardview_light_background"
-            app:civ_border_width="3dp" />
+            <EditText
+                android:id="@+id/setup_full_name"
+                android:layout_width="300dp"
+                android:layout_height="45dp"
+                android:layout_below="@+id/setup_username"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/input"
+                android:drawableStart="@drawable/name"
+                android:hint="Enter your full name"
+                android:inputType="text"
+                android:nextFocusDown="@id/setup_save"
+                android:padding="5dp"
+                android:textAlignment="center" />
 
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="45dp"
-            android:id="@+id/setup_save"
-            android:layout_below="@+id/setup_full_name"
-            android:layout_marginTop="15dp"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/button"
-            android:text="Save"
-            android:textAllCaps="false"
-            android:textColor="@color/cardview_light_background" />
-    </RelativeLayout>
+            <EditText
+                android:id="@+id/setup_username"
+                android:layout_width="300dp"
+                android:layout_height="45dp"
+                android:layout_below="@+id/setup_profile_image"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/input"
+                android:drawableStart="@drawable/username"
+                android:hint="Enter your user name"
+                android:inputType="text"
+                android:nextFocusDown="@id/setup_full_name"
+                android:padding="5dp"
+                android:textAlignment="center" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/setup_profile_image"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/profile"
+                app:civ_border_color="@color/cardview_light_background"
+                app:civ_border_width="3dp" />
+
+            <Spinner
+                android:id="@+id/setup_sex"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:layout_below="@+id/setup_full_name"
+                android:layout_alignStart="@+id/setup_full_name"
+                android:layout_marginStart="53dp"
+                android:layout_marginTop="27dp"
+                android:background="@color/colorWhite"
+                android:entries="@array/sex"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/textView_sex"
+                android:layout_width="52dp"
+                android:layout_height="44dp"
+                android:layout_below="@+id/setup_full_name"
+                android:layout_alignStart="@+id/setup_full_name"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="27dp"
+                android:background="@color/colorWhite"
+                android:text="@string/setup_text_sex"
+                android:gravity="center|center_horizontal"/>
+
+            <EditText
+                android:id="@+id/setup_age"
+                android:layout_width="60dp"
+                android:layout_height="44dp"
+                android:layout_below="@+id/setup_full_name"
+                android:layout_marginStart="53dp"
+                android:layout_marginTop="27dp"
+                android:layout_toEndOf="@+id/setup_sex"
+                android:background="@color/colorWhite"
+                android:ems="10"
+                android:gravity="center|center"
+                android:hint="@string/setup_age"
+                android:inputType="number"
+                android:textSize="25dp" />
+
+            <EditText
+                android:id="@+id/setup_height"
+                android:layout_width="150dp"
+                android:layout_height="44dp"
+                android:layout_below="@+id/setup_full_name"
+                android:layout_alignStart="@+id/textView_sex"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="96dp"
+                android:ems="10"
+                android:inputType="number"
+                android:background="@color/colorWhite"
+                android:hint="@string/setup_height"
+                android:gravity="end|center"
+                />
+
+            <EditText
+                android:id="@+id/setup_weight"
+                android:layout_width="150dp"
+                android:layout_height="44dp"
+                android:layout_below="@+id/setup_full_name"
+                android:layout_alignStart="@+id/setup_age"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="96dp"
+                android:ems="10"
+                android:inputType="number"
+                android:background="@color/colorWhite"
+                android:hint="@string/setup_weight"
+                android:gravity="end|center"/>
+        </RelativeLayout>
+
+    </ScrollView>
 
 </RelativeLayout>
