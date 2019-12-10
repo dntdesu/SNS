@@ -50,3 +50,10 @@ dependencies {
     //Bottom navView
     implementation 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:3.0.0'
 }
+///////////////////////
+repositories {
+    maven { url "https://jitpack.io" }
+}
+dependencies {
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.5'
+}
