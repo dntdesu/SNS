@@ -111,7 +111,7 @@
                 android:id="@+id/postLayout_comment"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginLeft="270dp"
+                android:layout_marginLeft="230dp"
                 android:src="@drawable/comment"
                 android:background="@android:color/background_light" />
         </LinearLayout>

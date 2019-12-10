@@ -63,50 +63,50 @@
         android:layout_marginTop="10dp">
 
 
-            <TextView
+        <TextView
+                android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="性別"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:id="@+id/setup_gender_label"
+            android:layout_marginStart="30dp" />
+
+        <RadioGroup
+            android:id="@+id/setup_gender_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/setup_gender_label"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp"
+            android:orientation="vertical">
+
+            <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="性別"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimaryDark"
-                android:id="@+id/setup_gender_label"
-                android:layout_marginStart="30dp" />
+                android:text="男性"
+                android:textSize="16dp"
+                android:textColor="@color/colorPrimary"
+                android:id="@+id/setup_man"
+                android:checked="true" />
 
-            <RadioGroup
-                android:id="@+id/setup_gender_group"
+            <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/setup_gender_label"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="20dp"
-                android:orientation="vertical">
+                android:text="女性"
+                android:textSize="16sp"
+                android:textColor="@color/colorPrimary"
+                android:id="@+id/setup_woman" />
 
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="男性"
-                    android:textSize="16dp"
-                    android:textColor="@color/colorPrimary"
-                    android:id="@+id/setup_man"
-                    android:checked="true" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="女性"
-                    android:textSize="16sp"
-                    android:textColor="@color/colorPrimary"
-                    android:id="@+id/setup_woman" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Unknown"
-                    android:textSize="16sp"
-                    android:textColor="@color/colorPrimary"
-                    android:id="@+id/setup_unknown" />
-            </RadioGroup>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unknown"
+                android:textSize="16sp"
+                android:textColor="@color/colorPrimary"
+                android:id="@+id/setup_unknown" />
+        </RadioGroup>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -133,16 +133,16 @@
                 android:background="@drawable/input"
                 android:nextFocusDown="@id/setup_weight" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="体重(kg)"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimaryDark"
-                android:id="@+id/setup_weight_label"
-                android:layout_marginStart="50dp"
-                android:layout_toRightOf="@+id/setup_high_label" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="体重(kg)"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:id="@+id/setup_weight_label"
+            android:layout_marginStart="50dp"
+            android:layout_toRightOf="@+id/setup_high_label" />
 
             <EditText
                 android:layout_width="120dp"
