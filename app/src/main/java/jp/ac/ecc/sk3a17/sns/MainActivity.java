@@ -203,8 +203,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void SendToProfile() {
-        Intent profileIntent = new Intent(MainActivity.this, ProfileActivity.class);
+        Intent profileIntent = new Intent(MainActivity.this, ProfileUpdateActivity.class);
         startActivity(profileIntent);
+    }
+
+    private void SendToFindFriends() {
+        Intent intent = new Intent(MainActivity.this, FindFriendActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -224,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Friends", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_find_friend:
-                Toast.makeText(this, "Find friend", Toast.LENGTH_SHORT).show();
+                SendToFindFriends();
                 break;
             case R.id.nav_messages:
                 Toast.makeText(this, "Messages", Toast.LENGTH_SHORT).show();
@@ -246,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener botNavListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
