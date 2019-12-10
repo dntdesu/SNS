@@ -1,4 +1,4 @@
-package jp.ac.ecc.sk3a17.sns;
+package jp.ac.ecc.sk3a17.sns.Model;
 
 public class Posts {
     public String uid, time, date, description, postImage, profileImage, fullName;

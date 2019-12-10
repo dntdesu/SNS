@@ -15,7 +15,6 @@ import jp.ac.ecc.sk3a17.sns.R;
  */
 public class CaloriesFragment extends Fragment {
 
-    private int k;
     public CaloriesFragment() {
         // Required empty public constructor
     }

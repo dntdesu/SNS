@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +14,13 @@ import android.widget.CalendarView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +42,11 @@ public class ExerciseFragment extends Fragment {
     String _exerciseName = "";
     //保存ボタンフィールド
     Button _btnSave;
+
+    //本日の日付取得
+    Calendar cal = Calendar.getInstance();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+    String selected_day = sdf.format(cal.getTime());
 
     public ExerciseFragment() {
         // Required empty public constructor
@@ -61,9 +70,9 @@ public class ExerciseFragment extends Fragment {
         //リスナー登録
         editbButton.setOnClickListener(new editButtonClick());
 
-        //登録データ数確認
+        //デバックデータ数確認
         TextView textCount = view.findViewById(R.id.textCount);
-        textCount.setText(String.valueOf(recordInsert()));
+        textCount.setText(selected_day);
 
         //カレンダークリックイベントリスナーをセット
         CalendarView calenderview = view.findViewById(R.id.calendarView);
@@ -86,7 +95,10 @@ public class ExerciseFragment extends Fragment {
         //カレンダービューの日付クリックリスナー
         @Override
         public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-
+            selected_day = String.valueOf(year) + "/" + (month + 1) + "/" + dayOfMonth;
+            TextView textCount = view.findViewById(R.id.textCount);
+            Log.d("date", selected_day);
+            Toast.makeText(getContext(), selected_day, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -134,9 +146,10 @@ public class ExerciseFragment extends Fragment {
     private class editButtonClick implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            //        //指定日メニューの編集画面
+            //指定日メニューの編集画面
             Intent intent = new Intent(getActivity(), ExerciseDayList.class);
-
+            //指定日String型で値渡し
+            intent.putExtra("selectedDay", selected_day);
             startActivity(intent);
         }
     }

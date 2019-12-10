@@ -56,8 +56,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO exerciseList(_id,name,mets,second,part) values (2, \"プッシュアップ（ワイド）\", 2.8, 1.8, 1);");
         db.execSQL("INSERT INTO exerciseList(_id,name,mets,second,part) values (3, \"プッシュアップ（ナロー）\", 2.8, 2, 1 );");
         db.execSQL("INSERT INTO exerciseList(_id,name,mets,second,part) values (4, \"プッシュアップ系（高強度なインターバル）\", 7.0, 1.7, 1 );");
-
-        /*
         db.execSQL("INSERT INTO exerciseList(_id,name,mets,second,part) values (5, \"ベンチプレス（ノーマル）\", 5.0, 3, 1);");
         db.execSQL("INSERT INTO exerciseList(_id,name,mets,second,part) values (6, \"ベンチプレス（ワイド）\", 5.0, 2.8, 1);");
         db.execSQL("INSERT INTO exerciseList(_id,name,mets,second,part) values (7, \"ベンチプレス（ナロー）\", 5.0, 3, 1);");
@@ -141,7 +139,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO exerciseList(_id,name,mets,second,part) values (85, \"ゴルフ\" , 3.8, null, 8);");
         db.execSQL("INSERT INTO exerciseList(_id,name,mets,second,part) values (86, \"ボクシング：スパーリング\" , 6.8, null, 8);");
         db.execSQL("INSERT INTO exerciseList(_id,name,mets,second,part) values (87, \"カーリング\" , 3.0, null, 8);");
-        db.execSQL("INSERT INTO exerciseList(_id,name,mets,second,part) values (88, \"ボウリング\" , 2.0, nll, 8);");
+        db.execSQL("INSERT INTO exerciseList(_id,name,mets,second,part) values (88, \"ボウリング\" , 2.0, null, 8);");
         db.execSQL("INSERT INTO exerciseList(_id,name,mets,second,part) values (89, \"ビリヤード\" , 1.5, null, 8);");
         db.execSQL("INSERT INTO exerciseList(_id,name,mets,second,part) values (90, \"柔道、柔術、空手\", 9.0, null, 8);");
         db.execSQL("INSERT INTO exerciseList(_id,name,mets,second,part) values (91, \"ダーツ\" , 1.5, null, 8);");
@@ -202,9 +200,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO exerciseList(_id,name,mets,second,part) values (146, \"自転車に乗る：レジャー、通勤、娯楽\" , 3.0, null, 13);");
         db.execSQL("INSERT INTO exerciseList(_id,name,mets,second,part) values (147, \"階段ダッシュ \" , 14, null, 13);");
 
-
-
-         */
 
     }
 

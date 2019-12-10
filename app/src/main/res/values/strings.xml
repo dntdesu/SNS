@@ -19,5 +19,6 @@
     <!-- Exercise -->
     <string name="exercise_edit_btn">運動メニュー編集</string>
     <string name="exercise_add_btn">運動メニュー追加</string>
+    <string name="exercise_back_btn">戻る</string>
 
 </resources>

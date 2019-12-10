@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,8 +31,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import jp.ac.ecc.sk3a17.sns.Fragments.CaloriesFragment;
 import jp.ac.ecc.sk3a17.sns.Exercise.ExerciseFragment;
+import jp.ac.ecc.sk3a17.sns.Fragments.CaloriesFragment;
 import jp.ac.ecc.sk3a17.sns.Fragments.HomeFragment;
 import jp.ac.ecc.sk3a17.sns.Fragments.WeightFragment;
 
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private CircleImageView navProfileImage;
     private String currentUserID;
     private ImageButton addNewPost;
+    private TextView high, weight, bmi;
 
 
     @Override
@@ -80,6 +82,10 @@ public class MainActivity extends AppCompatActivity {
         //Navigation view
         View navView = navigationView.inflateHeaderView(R.layout.navigation_header); //set header for navigation view
         navProfileImage = navView.findViewById(R.id.nav_header_image);
+        high = navView.findViewById(R.id.nav_high);
+        weight = navView.findViewById(R.id.nav_weight);
+        bmi = navView.findViewById(R.id.nav_bmi);
+
 
         //Bottom navigation
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -105,11 +111,27 @@ public class MainActivity extends AppCompatActivity {
                     String image = dataSnapshot.child("profileImage").getValue().toString();
                     Picasso.get().load(image).into(navProfileImage);
                 }
+                if (dataSnapshot.exists() && dataSnapshot.hasChild("high") && dataSnapshot.hasChild("weight")) {
+                    String userHigh = dataSnapshot.child("high").getValue().toString();
+                    String userWeight = dataSnapshot.child("weight").getValue().toString();
+                    //BMI formula
+                    Double BMI = Double.parseDouble(userWeight) / ((Double.parseDouble(userHigh) / 100) * (Double.parseDouble(userHigh) / 100));
+                    String userBMI = String.format("%.1f", BMI);
+                    high.setText(userHigh);
+                    weight.setText(userWeight);
+                    bmi.setText("BMI : " + userBMI);
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+        navProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendToProfile();
             }
         });
 
@@ -180,6 +202,16 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    private void SendToProfile() {
+        Intent profileIntent = new Intent(MainActivity.this, ProfileUpdateActivity.class);
+        startActivity(profileIntent);
+    }
+
+    private void SendToFindFriends() {
+        Intent intent = new Intent(MainActivity.this, FindFriendActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
@@ -191,13 +223,13 @@ public class MainActivity extends AppCompatActivity {
     private void userMenuSelector(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_profile:
-                Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
+                SendToProfile();
                 break;
             case R.id.nav_friends:
                 Toast.makeText(this, "Friends", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_find_friend:
-                Toast.makeText(this, "Find friend", Toast.LENGTH_SHORT).show();
+                SendToFindFriends();
                 break;
             case R.id.nav_messages:
                 Toast.makeText(this, "Messages", Toast.LENGTH_SHORT).show();
@@ -219,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener botNavListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {

@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:background="@android:color/background_light">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -80,6 +82,39 @@
             android:id="@+id/postLayout_image"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_margin="10dp">
+
+            <ImageButton
+                android:id="@+id/postLayout_like"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/like"
+                android:background="@android:color/background_light" />
+
+            <TextView
+                android:id="@+id/postLayout_like_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/background_light"
+                android:padding="5dp"
+                android:text="0"
+                android:textColor="@android:color/holo_blue_dark"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp" />
+
+            <ImageButton
+                android:id="@+id/postLayout_comment"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="230dp"
+                android:src="@drawable/comment"
+                android:background="@android:color/background_light" />
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>
