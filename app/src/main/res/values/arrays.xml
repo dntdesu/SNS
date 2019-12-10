@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 性別配列 -->
+<resources>
+    <string-array name="sex">
+        <item>@string/setup_man</item>
+        <item>@string/setup_woman</item>
+    </string-array>
+</resources>
