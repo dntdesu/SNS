@@ -212,6 +212,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void SendToFriendList() {
+        Intent intent = new Intent(MainActivity.this, FriendListActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
@@ -226,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
                 SendToProfile();
                 break;
             case R.id.nav_friends:
-                Toast.makeText(this, "Friends", Toast.LENGTH_SHORT).show();
+                SendToFriendList();
                 break;
             case R.id.nav_find_friend:
                 SendToFindFriends();

@@ -134,11 +134,11 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void AcceptRequest() {
 
-        friendRef.child(currentUserID).child(uid).setValue("friend").addOnCompleteListener(new OnCompleteListener<Void>() {
+        friendRef.child(currentUserID).child(uid).child("friend").setValue("true").addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    friendRef.child(uid).child(currentUserID).setValue("friend").addOnCompleteListener(new OnCompleteListener<Void>() {
+                    friendRef.child(uid).child(currentUserID).child("friend").setValue("true").addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
@@ -196,10 +196,10 @@ public class ProfileActivity extends AppCompatActivity {
                         });
                     }
                 } else {
-                    friendRef.child(currentUserID).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    friendRef.child(currentUserID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists() && dataSnapshot.getValue().toString().equals(uid)) {
+                            if (dataSnapshot.hasChild(uid)) {
                                 state = "friends";
                                 sendRequest.setText("Unfriend");
                                 denyRequest.setVisibility(View.INVISIBLE);
