@@ -13,7 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".FriendListActivity"></activity>
+        <activity android:name=".InboxActivity"></activity>
+        <activity android:name=".ChatActivity" />
+        <activity android:name=".FriendListActivity" />
         <activity android:name=".Exercise.ExerciseAddActivity" />
         <activity android:name=".CommentActivity" />
         <activity android:name=".ProfileActivity" />

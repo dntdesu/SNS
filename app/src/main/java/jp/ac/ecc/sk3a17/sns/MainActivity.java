@@ -217,6 +217,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void SendToInbox() {
+        Intent intent = new Intent(MainActivity.this, InboxActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
@@ -237,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
                 SendToFindFriends();
                 break;
             case R.id.nav_messages:
-                Toast.makeText(this, "Messages", Toast.LENGTH_SHORT).show();
+                SendToInbox();
                 break;
             case R.id.nav_settings:
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();

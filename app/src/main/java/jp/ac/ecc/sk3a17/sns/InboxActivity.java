@@ -1,6 +1,5 @@
 package jp.ac.ecc.sk3a17.sns;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,47 +25,49 @@ import com.squareup.picasso.Picasso;
 
 import jp.ac.ecc.sk3a17.sns.Model.Users;
 
-public class FriendListActivity extends AppCompatActivity {
-    private RecyclerView friendList;
-    private DatabaseReference friendRef, userRef;
+public class InboxActivity extends AppCompatActivity {
+    private RecyclerView inboxList;
+    private DatabaseReference messageRef, userRef;
     private FirebaseAuth mAuth;
     private String currentUserID;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_friend_list);
-        friendList = findViewById(R.id.friend_list_list);
+        setContentView(R.layout.activity_inbox);
+
+        inboxList = findViewById(R.id.inbox_list);
         userRef = FirebaseDatabase.getInstance().getReference().child("Users");
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
-        friendRef = FirebaseDatabase.getInstance().getReference().child("Friends").child(currentUserID);
+        messageRef = FirebaseDatabase.getInstance().getReference().child("Message").child(currentUserID);
         //List set up
-        friendList.setHasFixedSize(true);
+        inboxList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
-        friendList.setLayoutManager(linearLayoutManager);
-        DisplayFriendList();
+        inboxList.setLayoutManager(linearLayoutManager);
+        DisplayInboxList();
     }
 
-    private void DisplayFriendList() {
+    private void DisplayInboxList() {
         FirebaseRecyclerOptions<Users> options = new FirebaseRecyclerOptions.Builder<Users>()
-                .setQuery(friendRef, Users.class)
+                .setQuery(messageRef, Users.class)
                 .build();
 
-        FirebaseRecyclerAdapter<Users, FriendViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Users, FriendViewHolder>(options) {
+        FirebaseRecyclerAdapter<Users, InboxActivity.FriendViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Users, InboxActivity.FriendViewHolder>(options) {
 
             @NonNull
             @Override
-            public FriendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public InboxActivity.FriendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.users_layout, parent, false);
-                FriendViewHolder usersViewHolder = new FriendViewHolder(view);
+                InboxActivity.FriendViewHolder usersViewHolder = new InboxActivity.FriendViewHolder(view);
                 return usersViewHolder;
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull final FriendViewHolder holder, int position, @NonNull final Users model) {
+            protected void onBindViewHolder(@NonNull final InboxActivity.FriendViewHolder holder, int position, @NonNull final Users model) {
                 //String uid = model.getUid();
                 final String uid = getRef(position).getKey(); //get key of item has been clicked
                 userRef.child(uid).addValueEventListener(new ValueEventListener() {
@@ -83,29 +83,11 @@ public class FriendListActivity extends AppCompatActivity {
                         holder.mView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                CharSequence option[] = new CharSequence[]{
-                                        userName1 + "'s profile", "Send a message"
-                                };
-                                AlertDialog.Builder builder = new AlertDialog.Builder(FriendListActivity.this);
-                                builder.setTitle("Select options");
-                                builder.setItems(option, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        if (which == 0) {
-                                            Intent intent = new Intent(FriendListActivity.this, ProfileActivity.class);
-                                            intent.putExtra("UID", uid);
-                                            startActivity(intent);
-                                        }
-                                        if (which == 1) {
-                                            Intent intent = new Intent(FriendListActivity.this, ChatActivity.class);
-                                            intent.putExtra("UID", uid);
-                                            intent.putExtra("name", fullName1);
-                                            intent.putExtra("avatar", avatar1);
-                                            startActivity(intent);
-                                        }
-                                    }
-                                });
-                                builder.show();
+                                Intent intent = new Intent(InboxActivity.this, ChatActivity.class);
+                                intent.putExtra("UID", uid);
+                                intent.putExtra("name", fullName1);
+                                intent.putExtra("avatar", avatar1);
+                                startActivity(intent);
                             }
                         });
                     }
@@ -118,7 +100,7 @@ public class FriendListActivity extends AppCompatActivity {
             }
         };
 
-        friendList.setAdapter(firebaseRecyclerAdapter);
+        inboxList.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
 
     }
