@@ -19,6 +19,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -26,7 +28,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView cover;
     private CircleImageView avatar;
     private TextView userName, fullName, status;
-    private DatabaseReference userRef, friendRequestRef, friendRef;
+    private DatabaseReference userRef, friendRequestRef, friendRef, notificationRef;
     private FirebaseAuth mAuth;
     private String currentUserID, uid, state;
     private Button sendRequest, denyRequest;
@@ -51,6 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
         userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
         friendRequestRef = FirebaseDatabase.getInstance().getReference().child("FriendRequest");
         friendRef = FirebaseDatabase.getInstance().getReference().child("Friends");
+        notificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications");
         if (!uid.equals(currentUserID)) {
             sendRequest.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -255,11 +258,21 @@ public class ProfileActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                sendRequest.setEnabled(true);
-                                state = "request_sent";
-                                sendRequest.setText("Cancel Request");
-                                denyRequest.setVisibility(View.INVISIBLE);
-                                denyRequest.setEnabled(false);
+                                HashMap<String, String> chatNotificationMap = new HashMap<>();
+                                chatNotificationMap.put("from", currentUserID);
+                                chatNotificationMap.put("type", "request");
+                                notificationRef.child(uid).push().setValue(chatNotificationMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            sendRequest.setEnabled(true);
+                                            state = "request_sent";
+                                            sendRequest.setText("Cancel Request");
+                                            denyRequest.setVisibility(View.INVISIBLE);
+                                            denyRequest.setEnabled(false);
+                                        }
+                                    }
+                                });
 
                             }
                         }

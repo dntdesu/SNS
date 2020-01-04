@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -222,6 +221,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void SendToFriendRequest() {
+        Intent intent = new Intent(MainActivity.this, FriendRequestActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
@@ -244,14 +248,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_messages:
                 SendToInbox();
                 break;
-            case R.id.nav_settings:
-                Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.nav_feedback:
-                Toast.makeText(this, "Feedback", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.nav_about:
-                Toast.makeText(this, "About", Toast.LENGTH_SHORT).show();
+            case R.id.nav_friend_request:
+                SendToFriendRequest();
                 break;
             case R.id.nav_logout:
                 mAuth.signOut();

@@ -22,6 +22,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class LogInActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -30,11 +33,13 @@ public class LogInActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
     private GoogleSignInClient mGoogleSignInClient;
     private Button btn_logInWithGoogle, btn_logInWithPhonenumber;
+    private DatabaseReference userRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
+        userRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
         Log.e(TAG, "Start Login");
         setContentView(R.layout.activity_log_in);
@@ -107,7 +112,16 @@ public class LogInActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            SendToMain();
+                            String currentUserID = mAuth.getCurrentUser().getUid();
+                            String token = FirebaseInstanceId.getInstance().getToken();
+                            userRef.child(currentUserID).child("device_token").setValue(token).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        SendToMain();
+                                    }
+                                }
+                            });
                         } else {
                             Toast.makeText(LogInActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                         }

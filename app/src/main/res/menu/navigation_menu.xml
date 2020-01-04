@@ -22,19 +22,9 @@
         android:icon="@drawable/messages"
         />
     <item
-        android:id="@+id/nav_settings"
-        android:title="Settings"
-        android:icon="@drawable/settings"
-        />
-    <item
-        android:id="@+id/nav_feedback"
-        android:title="Feedback"
-        android:icon="@drawable/feedback"
-        />
-    <item
-        android:id="@+id/nav_about"
-        android:title="About"
-        android:icon="@drawable/about"
+        android:id="@+id/nav_friend_request"
+        android:title="Friend request"
+        android:icon="@drawable/ic_friend_request"
         />
     <item
         android:id="@+id/nav_logout"
