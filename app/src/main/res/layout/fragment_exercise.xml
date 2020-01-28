@@ -10,14 +10,21 @@
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:max="1000"
         android:progress="800" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="158dp"
+        android:layout_height="116dp"
         android:orientation="horizontal">
+
+
+        <ListView
+            android:id="@+id/lvExercise"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7" />
 
         <Button
             android:id="@+id/editButton"
@@ -28,22 +35,11 @@
             android:text="@string/exercise_edit_btn"
             android:textSize="12sp" />
 
-        <ListView
-            android:id="@+id/lvExercise"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.7" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textCount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
 
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
-        android:layout_height="288dp" />
+        android:layout_height="302dp" />
 
 </LinearLayout>

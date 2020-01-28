@@ -12,103 +12,114 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="131dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="0.33"
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/chestButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="@string/exercise_sort_chest" />
 
             <Button
-                android:id="@+id/button7"
+                android:id="@+id/armsButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="@string/exercise_sort_arms" />
 
             <Button
-                android:id="@+id/button10"
+                android:id="@+id/etcButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="@string/exercise_sort_etc" />
 
             <Button
-                android:id="@+id/button13"
+                android:id="@+id/winterButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="@string/exercise_sort_winter" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="137dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="0.33"
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/button5"
+                android:id="@+id/backButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="@string/exercise_sort_back" />
 
             <Button
-                android:id="@+id/button8"
+                android:id="@+id/absButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="@string/exercise_sort_abs" />
 
             <Button
-                android:id="@+id/button11"
+                android:id="@+id/suportsButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="@string/exercise_sort_sports" />
 
             <Button
-                android:id="@+id/button14"
+                android:id="@+id/danceButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="@string/exercise_sort_dance" />
 
             <Button
-                android:id="@+id/button16"
+                android:id="@+id/runButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="@string/exercise_sort_run"
+                android:textSize="10sp" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="0.33"
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/button6"
+                android:id="@+id/shoulderButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="@string/exercise_sort_shoulder" />
 
             <Button
-                android:id="@+id/button9"
+                android:id="@+id/legsButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="@string/exercise_sort_legs" />
 
             <Button
-                android:id="@+id/button12"
+                android:id="@+id/waterButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="@string/exercise_sort_water" />
 
             <Button
-                android:id="@+id/button15"
+                android:id="@+id/walkButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="@string/exercise_sort_walk" />
+
+            <Button
+                android:id="@+id/backBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/exercise_sort_backBtn" />
         </LinearLayout>
     </LinearLayout>
 
     <ListView
+        android:id="@+id/lvExerciseList"
         android:layout_height="match_parent"
         android:layout_width="match_parent" />
 

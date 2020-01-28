@@ -49,4 +49,14 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-database:6.0.2'
     //Bottom navView
     implementation 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:3.0.0'
+
+
+}
+
+//weight
+repositories {
+    maven { url "https://jitpack.io" }
+    dependencies {
+        compile 'com.github.PhilJay:MPAndroidChart:v2.1.5'
+    }
 }

@@ -20,5 +20,23 @@
     <string name="exercise_edit_btn">運動メニュー編集</string>
     <string name="exercise_add_btn">運動メニュー追加</string>
     <string name="exercise_back_btn">戻る</string>
+    <string name="exercise_sort_chest">筋トレ胸</string>
+    <string name="exercise_sort_back">筋トレ背中</string>
+    <string name="exercise_sort_shoulder">筋トレ肩</string>
+    <string name="exercise_sort_arms">筋トレ腕</string>
+    <string name="exercise_sort_abs">筋トレ腹筋</string>
+    <string name="exercise_sort_legs">筋トレ足</string>
+    <string name="exercise_sort_etc">筋トレその他</string>
+    <string name="exercise_sort_sports">スポーツ</string>
+    <string name="exercise_sort_water">水中活動</string>
+    <string name="exercise_sort_winter">冬季</string>
+    <string name="exercise_sort_dance">ダンス</string>
+    <string name="exercise_sort_walk">ウォーキング</string>
+    <string name="exercise_sort_run">ランニング・自転車</string>
+    <string name="exercise_sort_backBtn">戻る</string>
+    <string name="exercise_sort_rowadd_mets">運動強度:</string>
+    <string name="exercise_sort_rowadd_second">10回あたりのスピード目安:</string>
+    <string name="exercise_order_text">運動の量を設定し決定してください</string>
+
 
 </resources>

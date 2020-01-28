@@ -37,8 +37,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //日ごとの運動テーブル作成
         sb.append("CREATE TABLE day_exercise(");
-        sb.append("day TEXT,");
-        sb.append("exercise_id INTEGER);");
+        sb.append("date TEXT,");
+        sb.append("name TEXT,");
+        sb.append("rep INTEGER,");
+        sb.append("set_time INTEGER);");
         sql = sb.toString();
         db.execSQL(sql);
         sb.setLength(0);
@@ -49,6 +51,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sb.append("consumption INTEGER);");
         sql = sb.toString();
         db.execSQL(sql);
+        sb.setLength(0);
+
+        /*
+        //体重テーブル作成用SQL文の作成
+        sb.append("CREATE TABLE weightDb(");
+        sb.append("date TEXT,");
+        sb.append("weight INTEGER,");
+        sb.append(");");
+        sql = sb.toString();
+        db.execSQL(sql);
+         */
+
+        //目標体重保存テーブル
+        sb.append("CREATE TABLE goalWeight(");
+        sb.append("deadline TEXT,");
+        sb.append("goalWeight INTEGER);");
+        sql = sb.toString();
+        db.execSQL(sql);
+        sb.setLength(0);
 
 
         //運動テーブルに初期データ挿入

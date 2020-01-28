@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,6 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -33,8 +30,6 @@ import jp.ac.ecc.sk3a17.sns.R;
  */
 public class ExerciseFragment extends Fragment {
     private View view;
-    //ダミーデータ
-    private List<Map<String, Object>> _menuList;
 
     //選択されたエクササイズの主キーIDを表すフィールド
     int _exerciseId = -1;
@@ -64,27 +59,17 @@ public class ExerciseFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_exercise, container, false);
 
-
         //編集ボタン登録
         Button editbButton = view.findViewById(R.id.editButton);
         //リスナー登録
         editbButton.setOnClickListener(new editButtonClick());
 
-        //デバックデータ数確認
-        TextView textCount = view.findViewById(R.id.textCount);
-        textCount.setText(selected_day);
-
         //カレンダークリックイベントリスナーをセット
         CalendarView calenderview = view.findViewById(R.id.calendarView);
         calenderview.setOnDateChangeListener(new selectedDay());
 
-        //adapterの作成　テストデータ表示
-        _menuList = createMenuList();
-        String[] from = {"name", "rep", "set"};
-        int[] to = {R.id.tvDayMenuExercise, R.id.tvDayMenuRep, R.id.tvDayMenuSet};
-        SimpleAdapter adapter = new SimpleAdapter(getContext(), _menuList, R.layout.row, from, to);
-        ListView lvMenu = view.findViewById(R.id.lvExercise);
-        lvMenu.setAdapter(adapter);
+        //データ検索→ListViewへ登録
+        setDataToListView(selectExercise());
 
         return view;
 
@@ -96,49 +81,9 @@ public class ExerciseFragment extends Fragment {
         @Override
         public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
             selected_day = String.valueOf(year) + "/" + (month + 1) + "/" + dayOfMonth;
-            TextView textCount = view.findViewById(R.id.textCount);
-            Log.d("date", selected_day);
-            Toast.makeText(getContext(), selected_day, Toast.LENGTH_SHORT).show();
+            //データ検索→ListViewへ登録
+            setDataToListView(selectExercise());
         }
-    }
-
-
-    //リストを作成するメソッド
-    private List<Map<String, Object>> createMenuList() {
-        //Listオブジェクト用意
-        List<Map<String, Object>> menuList = new ArrayList<>();
-        //Mapオブジェクト用意、menuListへのデータ登録
-        Map<String, Object> menu = new HashMap<>();
-        menu.put("name", "腕立て");
-        menu.put("rep", 8);
-        menu.put("set", "3");
-        menuList.add(menu);
-
-        menu = new HashMap<>();
-        menu.put("name", "腹筋");
-        menu.put("rep", 8);
-        menu.put("set", "2");
-        menuList.add(menu);
-
-        menu = new HashMap<>();
-        menu.put("name", "スクワット");
-        menu.put("rep", 6);
-        menu.put("set", "3");
-        menuList.add(menu);
-
-        menu = new HashMap<>();
-        menu.put("name", "懸垂");
-        menu.put("rep", 6);
-        menu.put("set", "3");
-        menuList.add(menu);
-
-        menu = new HashMap<>();
-        menu.put("name", "背筋");
-        menu.put("rep", 6);
-        menu.put("set", "3");
-        menuList.add(menu);
-
-        return menuList;
     }
 
     //編集ボタンクリックリスナー
@@ -154,28 +99,59 @@ public class ExerciseFragment extends Fragment {
         }
     }
 
-    //データベースをにデータ格納
-    public int recordInsert() {
-        //データベースヘルパーオブジェクト生成
-        DatabaseHelper helper = new DatabaseHelper(getContext());
-        //データベース接続オブジェクト生成
-        SQLiteDatabase db = helper.getWritableDatabase();
+    //データベースから指定日の運動検索
+    public List<Map<String, Object>> selectExercise() {
+        //データを取り出すようの変数
+        String name = "";
+        int rep = 0;
+        int set_time = 0;
+        //戻り値用のList
+        List<Map<String, Object>> menuList = new ArrayList<>();
 
-        int count = 0;
+        //データベースへの接続取得
+        DatabaseHelper helper = new DatabaseHelper(getContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+
         try {
-            //すでに登録されているデータカウント
-            Cursor cursor = db.rawQuery(String.format("SELECT COUNT(*) FROM exerciseList"), null);
-            if (cursor.moveToNext()) {
-                count = cursor.getInt(0);
+            //検索文字列用意
+            String sql = "SELECT * FROM day_exercise WHERE date = ?";
+            //配列化
+            String args[] = {selected_day};
+            //検索実行
+            Cursor cursor = db.rawQuery(sql, args);
+
+            //次のデータが存在する間ループ　日付、種目名、回数、セット数取得
+            while (cursor.moveToNext()) {
+                //Cursor型からデータ取り出し
+                selected_day = cursor.getString(cursor.getColumnIndex("date"));
+                name = cursor.getString(cursor.getColumnIndex("name"));
+                rep = cursor.getInt(cursor.getColumnIndex("rep"));
+                set_time = cursor.getInt(cursor.getColumnIndex("set_time"));
+
+                //Mapオブジェクト用意、menuListへのデータ登録
+                Map<String, Object> menu = new HashMap<>();
+                menu.put("date", selected_day);
+                menu.put("name", name);
+                menu.put("rep", rep);
+                menu.put("set_time", set_time);
+                menuList.add(menu);
             }
+
         } finally {
-            //データベース接続オブジェクト開放
             db.close();
         }
 
+        return menuList;
+    }
 
-        return count;
-
+    //データをListViewへadapter登録
+    public void setDataToListView(List<Map<String, Object>> menuList) {
+        //adapterの作成　テストデータ表示
+        String[] from = {"name", "rep", "set"};
+        int[] to = {R.id.tvDayMenuExercise, R.id.tvDayMenuRep, R.id.tvDayMenuSet};
+        SimpleAdapter adapter = new SimpleAdapter(getContext(), menuList, R.layout.row, from, to);
+        ListView lvMenu = view.findViewById(R.id.lvExercise);
+        lvMenu.setAdapter(adapter);
     }
 
 }
