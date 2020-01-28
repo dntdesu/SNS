@@ -16,7 +16,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="194dp"
+            android:layout_height="180dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -37,17 +37,17 @@
                     android:layout_height="29dp"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/textView4"
-                        android:layout_width="168dp"
-                        android:layout_height="match_parent"
-                        android:text="目標体重：70kg" />
-
                     <Button
                         android:id="@+id/button"
                         android:layout_width="80dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/goalTextview"
+                        android:layout_width="168dp"
+                        android:layout_height="match_parent"
+                        android:text="目標体重：" />
 
                 </LinearLayout>
 
@@ -61,7 +61,7 @@
                 <TextView
                     android:id="@+id/textView2"
                     android:layout_width="181dp"
-                    android:layout_height="42dp"
+                    android:layout_height="43dp"
                     android:layout_gravity="center"
                     android:text="現在"
                     android:textSize="24sp" />
@@ -74,11 +74,39 @@
                 <Button
                     android:id="@+id/EntryButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="36dp"
                     android:text="体重記録" />
 
             </LinearLayout>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/lastButton"
+                android:layout_width="132dp"
+                android:layout_height="match_parent"
+                android:text="←"
+                android:textSize="10sp" />
+
+            <CheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="月" />
+
+            <Button
+                android:id="@+id/nextButton"
+                android:layout_width="132dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="→"
+                android:textSize="10sp" />
         </LinearLayout>
 
         <com.github.mikephil.charting.charts.LineChart

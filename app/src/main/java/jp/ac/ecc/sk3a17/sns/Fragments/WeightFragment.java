@@ -1,12 +1,12 @@
 package jp.ac.ecc.sk3a17.sns.Fragments;
 
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +15,11 @@ import jp.ac.ecc.sk3a17.sns.DatabaseHelper;
 import jp.ac.ecc.sk3a17.sns.R;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.github.mikephil.charting.charts.LineChart;
@@ -37,32 +40,40 @@ public class WeightFragment extends Fragment {
     private EditText editText;
     private TextView textView2;
     private TextView textView3;
+    private TextView textView4;
     private ImageView imageView;
     private Button EntryButton;
+    private Button lastButton;
+    private Button nextButton;
     long weight;
 
     long data[] = new long[7];
-    String date[] = new String[7];
+    String date[] = new String[31];
     Date[] date2 = new Date[7];
     int goal[] = new int[7];
-    long yosoku[]  = new long[7];
+    long yosoku[] = new long[7];
     int meal;//食べた量
     int training;//動いた量
     int xKcal;//
+    int ButtonCount;//次の月や前の月に移動するとき押した回数を記録
     double ingestion;
     long tomorrow_weight;
+    CheckBox checkBox;
+    int month;//一ヶ月の日数分
+    int week;//
+    int dayCount;
 
-
-
-    public WeightFragment() {
-        // Required empty public constructor
-    }
-
+    LineChart lineChart;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_weight, container, false);
+
+        lineChart = view.findViewById(R.id.line_chart);
+
+        ButtonCount = 0;
+        dayCount = -4;
 
         data[0] = 100;
         data[1] = 95;
@@ -71,14 +82,14 @@ public class WeightFragment extends Fragment {
         data[4] = 80;
 
         for (int i = 0; i < goal.length; i++) {
-            goal[i]  = 70;
+            goal[i] = 70;
         }
 
-        graphDisplay(view);
+        //WeekGraphDisplay();
+        MonthgraphDisplay();
 
         return view;
     }
-
 
     /*ボタン処理*/
     @Override
@@ -86,11 +97,11 @@ public class WeightFragment extends Fragment {
         super.onStart();
         findViews();
 
+        //体重入力ボタン
         EntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //現在体重を表示
-
                 try {
                     //目標体重まで
                     //現在の体重を入力、表示
@@ -98,8 +109,7 @@ public class WeightFragment extends Fragment {
                     weight = Long.parseLong(str);
 
                     //目標体重までの残り表示
-                    //textView3.setText("成功");
-                    textView3.setText("あと" + (weight-40) + " Kg");
+                    textView3.setText("あと" + (weight - goal[0]) + " Kg");
 
                     //現在の体重を入力、表示
                     textView2.setText("現在 " + editText.getText() + " Kg");
@@ -109,13 +119,13 @@ public class WeightFragment extends Fragment {
                     yosoku[5] = weight;
 
                     //これをしたらグラフ表示できる
-                    View v = (View)((View)((View)view.getParent()).getParent()).getParent();
+                    View v = (View) ((View) ((View) view.getParent()).getParent()).getParent();
 
                     //目標体重を変える
                     target_change();
 
                     //グラフを再表示
-                    graphDisplay(v);
+                    MonthgraphDisplay();
 
                     //画像切り替え
                     SwitchImages();
@@ -124,42 +134,295 @@ public class WeightFragment extends Fragment {
                     editText.getEditableText().clear();
 
                 } catch (Exception e) {
-                    String str= "体重を入力してください";
-                    Toast toast = (Toast.makeText(getContext(),str,Toast.LENGTH_LONG));
+                    String str = "体重を入力してください";
+                    Toast toast = (Toast.makeText(getContext(), str, Toast.LENGTH_LONG));
                     toast.show();
                 }
-
-
                 //入力ボタン押したらキーボードを消す
-                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        });
+        //月･週変更チェックボックス
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 表示する文字列をチェックのオンオフで変える
+                if (checkBox.isChecked() == true) {// チェックされていたら
+                    ButtonCount = 0;
+                    checkBox.setText("週");
+                    Log.d("aaaaaa", "aaaaaaaa2");
+                    WeekGraphDisplay();
+                } else {// チェックされていなかったら
+                    ButtonCount = 0;
+                    checkBox.setText("月");
+                    Log.d("aaaaaa", "aaaaaaaa3");
+                    MonthgraphDisplay();
+                }
+            }
+        });
 
+        //前の週、月に移動ボタン
+        lastButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ButtonCount -= 1;
+                if (checkBox.isChecked() == true) {// チェックされていたら
 
+                    String display = "前の週に移動";
+                    Toast toast = Toast.makeText(getContext(), display, Toast.LENGTH_LONG);
+                    toast.show();
+                    LastGraphDisplay();
+                } else {// チェックされていなかったら
+                    String display = "前の月に移動" + ButtonCount;
+                    Toast toast = Toast.makeText(getContext(), display, Toast.LENGTH_LONG);
+                    toast.show();
+                    MonthgraphDisplay();
+                }
+
+            }
+        });
+        //次の週、月に移動ボタン
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ButtonCount += 1;
+
+                String display = "次の月に移動" + ButtonCount;
+                Toast toast = Toast.makeText(getContext(), display, Toast.LENGTH_LONG);
+                toast.show();
+
+                if (checkBox.isChecked() == true) {// チェックされていたら
+                    LastGraphDisplay();
+                } else {// チェックされていなかったら
+                    MonthgraphDisplay();
+                }
             }
         });
     }
 
     /**/
-    protected void findViews(){
-        editText = (EditText)getActivity().findViewById(R.id.EntryWeight);//体重入力するtextBox
-        EntryButton = (Button)getActivity().findViewById(R.id.EntryButton);//体重を入力するbutton
-        textView2 = (TextView)getActivity().findViewById(R.id.textView2);//体重を表示するlabel
-        textView3 = (TextView)getActivity().findViewById(R.id.textView3);//体重を表示するlabel
-        imageView = (ImageView)getActivity().findViewById(R.id.imageView);//画像
+    protected void findViews() {
+        editText = (EditText) getActivity().findViewById(R.id.EntryWeight);//体重入力するtextBox
+        EntryButton = (Button) getActivity().findViewById(R.id.EntryButton);//体重を入力するbutton
+        lastButton = (Button) getActivity().findViewById(R.id.lastButton);//前の週、月に移動するbutton
+        nextButton = (Button) getActivity().findViewById(R.id.nextButton);//次の週、月に移動するbutton
+        textView2 = (TextView) getActivity().findViewById(R.id.textView2);//現在の体重を表示するlabel
+        textView3 = (TextView) getActivity().findViewById(R.id.textView3);//目標までの残りを表示するlabel
+        textView4 = (TextView) getActivity().findViewById(R.id.goalTextview);//目標体重を表示するlabel
+        imageView = (ImageView) getActivity().findViewById(R.id.imageView);//画像
+        checkBox = (CheckBox) getActivity().findViewById(R.id.checkBox);
     }
 
-    /*
-    グラフ表示メソッド
-     */
-    private void  graphDisplay(View view){
+    /*グラフ表示メソッド(一ヶ月)*/
+    private void MonthgraphDisplay() {
+        Calendar cl = Calendar.getInstance();
+        cl.set(Calendar.YEAR, 2020);
+        cl.set(Calendar.MONTH, cl.get(Calendar.MONTH) + ButtonCount);
+        int days = cl.getActualMaximum(Calendar.DAY_OF_MONTH);//一ヶ月の日数を計算
+        month = (cl.get(Calendar.MONTH) + 1);
 
-        LayoutInflater inf= LayoutInflater.from(getContext());
-        LineChart lineChart = (LineChart) view.findViewById(R.id.line_chart);
+        // X軸の値
+        ArrayList<String> xValues = new ArrayList<>();
+
+        int testDate = 1;
+
+        //一ヶ月の日数分表示
+        for (int i = 0; i < days; i++) {
+            if (i == 0) {
+                date[i] = (month) + "/" + Integer.toString(testDate++) + "日";
+                xValues.add((date[i]));
+            } else {
+                date[i] = Integer.toString(testDate++) + "日";
+                xValues.add((date[i]));
+            }
+        }
+
+
+        // Y軸の設定
+        {
+            YAxis leftAxis = lineChart.getAxisLeft();
+            YAxis rightAxis = lineChart.getAxisRight();
+            //データの値でY軸が変更される
+            leftAxis.setStartAtZero(false);
+            //Y軸の最大最小を決める
+            leftAxis.setAxisMaxValue(120);
+            leftAxis.setAxisMinValue(20);
+            //Y軸の間隔
+            leftAxis.setLabelCount(11, true);
+            //右にはY軸いらないから消す
+            rightAxis.setEnabled(false);
+        }
+
+
+        //グラフに値を追加
+        ArrayList<LineDataSet> dataSets = new ArrayList<>();
+
+        //体重
+        ArrayList<Entry> value = new ArrayList<>();
+        LineDataSet valueDataSet = new LineDataSet(value, "体重");
+
+        for (int j = 0; j < 6; j++) {
+            value.add(new Entry(data[j], j));
+        }
+        valueDataSet.setColor(Color.rgb(0, 220, 180));
+        valueDataSet.setValueTextSize(10f);
+
+        //目標体重の線
+        ArrayList<Entry> yVals2 = new ArrayList<Entry>();
+        LineDataSet set2 = new LineDataSet(yVals2, "目標");
+
+        for (int i = 0; i < goal.length; i++) {
+            yVals2.add(new Entry(goal[i], i));
+        }
+        set2.setColor(Color.rgb(164, 0, 0));
+        set2.setValueTextSize(0f);
+
+
+        //予測体重の線
+        ArrayList<Entry> yosoku2 = new ArrayList<Entry>();
+        LineDataSet set3 = new LineDataSet(yosoku2, "予測");
+
+        for (int m = 0; m <= 4; m++) {
+            yosoku[m] = data[m];
+        }
+        yosoku[6] = tomorrow_weight;
+
+        for (int k = 0; k < yosoku.length; k++) {
+            yosoku2.add(new Entry(yosoku[k], k));
+        }
+        set3.setColor(Color.rgb(250, 180, 0));
+        set3.setValueTextSize(0f);
+
+        valueDataSet.setDrawFilled(false);//グラフの塗りつぶしをするかしないか
+
+        dataSets.add(set2);
+        dataSets.add(set3);
+        dataSets.add(valueDataSet);
+
+        lineChart.setData(new LineData(xValues, dataSets));
+    }
+
+    /*画像切り替えメソッド*/
+    private void SwitchImages() {
+        double shin = 150.2;
+        double shinm = shin / 100;
+        double shinm2 = shinm * shinm;
+        double bmi = weight / shinm2;
+        if (bmi >= 40) {
+            imageView.setImageResource(R.drawable.no4);
+            Toast.makeText(getActivity(), "一番", Toast.LENGTH_SHORT).show();
+        } else if (bmi >= 35 && bmi < 40) {
+            imageView.setImageResource(R.drawable.no3);
+            Toast.makeText(getActivity(), "二番", Toast.LENGTH_SHORT).show();
+        } else if (bmi >= 30 && bmi < 35) {
+            imageView.setImageResource(R.drawable.no2);
+            Toast.makeText(getActivity(), "三番", Toast.LENGTH_SHORT).show();
+        } /*else if (bmi >= 25 && bmi < 30) {
+            imageView.setImageResource(R.drawable.no1);
+            Toast.makeText(getActivity(), "四番", Toast.LENGTH_SHORT).show();
+        } else if (bmi >= 18 && bmi < 25) {
+            im1.setImageResource(R.drawable.yoga);
+            Toast.makeText(getActivity(), "五番", Toast.LENGTH_SHORT).show();
+        } */ else {
+            imageView.setImageResource(R.drawable.no1);
+        }
+    }
+
+    /*目標体重変更メソッド*/
+    private void target_change() {
+
+        for (int i = 0; i < goal.length; i++) {
+            goal[i] = goal[i];
+        }
+    }
+
+    /*次の日の体重予測*/
+    private void tomorrow() {
+
+        /////摂取と消費
+        meal = 1;
+        training = -69900;//-69900kcal消費していたら明日10kg減る
+        ////
+
+        xKcal = meal + (training);
+        ingestion = xKcal / 6990;
+
+        tomorrow_weight = weight + ((int) ingestion);
+    }
+
+    /*体重記録するときのDBInsert*/
+    private void databaseInsert() {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Calendar calendar = Calendar.getInstance();
+        String toDay = sdf.format(calendar.getTime());//今日の日付をString型で格納
+
+        //データベースヘルパーオブジェクト生成
+        DatabaseHelper helper = new DatabaseHelper(getContext());
+        //データベース接続オブジェクト生成
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        try {
+            //まずは選択された運動のメモデータ削除。その後インサート
+            //削除用SQL文用意
+            String sqlDelete = "DELETE FROM weightdb WHERE date = ?";
+            //SQL文を元にプリペアステートメントを取得
+            SQLiteStatement stmt = db.compileStatement(sqlDelete);
+            //変数バインド
+            stmt.bindString(1, toDay);
+            //SQL実行
+            stmt.executeUpdateDelete();
+
+            //インサート文
+            String sqlInsert = "INSERT INTO weightDb(date, weight) VALUES(?,?)";//weight以外は他のページからとりたい
+            //プリペアステートメント所得
+            stmt = db.compileStatement(sqlInsert);
+            //変数バインド
+            stmt.bindString(1, toDay);//(今)
+            stmt.bindLong(2, weight);//60
+            //SQL実行
+            stmt.executeInsert();
+
+        } finally {
+            //データベース接続オブジェクト開放
+            db.close();
+        }
+
+    }
+
+    /*DBのデータを取ってきてグラフに渡す*/
+     /*private  void databeseSelect(){
+        //データベースヘルパーオブジェクト生成
+        DatabaseHelper helper = new DatabaseHelper(getContext());
+        //データベース接続オブジェクト生成
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        //SQL文作成
+        String sql = "SELECT * FROM weightdb";
+        //where date BETWEEN TO_DATE(NOW()-INTERVAL 5DAY, 'YYYY/MM/DD')
+        // AND TO_DATE(NOW(), 'YYYY/MM/DD');"
+        // AND TO_DATE('2017-6-30', 'YYYY/MM/DD');"
+        //データ取得
+        Cursor c = db.rawQuery(sql, null);
+
+        int loop = 0;
+
+        //Coursor型ｃに入っているデータを順番に取り出す
+        while (c.moveToNext()){
+　　　      //getColumnIndexの引数は列の名前
+            date[loop++] = c.getString(c.getColumnIndex("date"));
+            weight = c.getInt(c.getColumnIndex("weight"));
+        }
+    }*/
+    /*グラフ表示メソッド(一週間)*/
+    private void WeekGraphDisplay() {
 
         // X軸の値
         SimpleDateFormat sdf = new SimpleDateFormat("dd");
         Calendar calendar = Calendar.getInstance();
         int n = 0;
+        int day = 0;
 
         for (int i = -5; i <= 1; i++) {
             calendar.add(Calendar.DATE, i);
@@ -170,10 +433,9 @@ public class WeightFragment extends Fragment {
 
         ArrayList<String> xValues = new ArrayList<>();
 
-        for (int i = 0; i < date.length; i++) {
+        for (int i = 0; i < 7; i++) {
             xValues.add((date[i]));
         }
-
 
         // Y軸の設定
         YAxis leftAxis = lineChart.getAxisLeft();
@@ -184,10 +446,9 @@ public class WeightFragment extends Fragment {
         leftAxis.setAxisMaxValue(120);
         leftAxis.setAxisMinValue(20);
         //Y軸の間隔
-        leftAxis.setLabelCount(11,true);
+        leftAxis.setLabelCount(11, true);
         //右にはY軸いらないから消す
         rightAxis.setEnabled(false);
-
 
         //グラフに値を追加
         ArrayList<LineDataSet> dataSets = new ArrayList<>();
@@ -213,18 +474,17 @@ public class WeightFragment extends Fragment {
         set2.setColor(Color.rgb(164, 0, 0));
         set2.setValueTextSize(0f);
 
-
         //予測体重の線
         ArrayList<Entry> yosoku2 = new ArrayList<Entry>();
         LineDataSet set3 = new LineDataSet(yosoku2, "予測");
 
-        for(int m = 0; m <= 4; m++){
+        for (int m = 0; m <= 4; m++) {
             yosoku[m] = data[m];
         }
         yosoku[6] = tomorrow_weight;
 
         for (int k = 0; k < yosoku.length; k++) {
-            yosoku2.add(new Entry(yosoku[k],k));
+            yosoku2.add(new Entry(yosoku[k], k));
         }
         set3.setColor(Color.rgb(250, 180, 0));
         set3.setValueTextSize(0f);
@@ -238,135 +498,105 @@ public class WeightFragment extends Fragment {
 
         lineChart.setData(new LineData(xValues, dataSets));
 
-
     }
 
-    /*
-    画像切り替えメソッド
-     */
-    private  void SwitchImages(){
-        double shin = 150.2;
-        double shinm = shin / 100;
-        double shinm2 = shinm * shinm;
-        double bmi = weight / shinm2;
-        if (bmi >= 40) {
-            imageView.setImageResource(R.drawable.no4);
-            Toast.makeText(getActivity(), "一番", Toast.LENGTH_SHORT).show();
-        } else if (bmi >= 35 && bmi < 40) {
-            imageView.setImageResource(R.drawable.no3);
-            Toast.makeText(getActivity(), "二番", Toast.LENGTH_SHORT).show();
-        } else if (bmi >= 30 && bmi < 35) {
-            imageView.setImageResource(R.drawable.no2);
-            Toast.makeText(getActivity(), "三番", Toast.LENGTH_SHORT).show();
-        } /*else if (bmi >= 25 && bmi < 30) {
-            imageView.setImageResource(R.drawable.no1);
-            Toast.makeText(getActivity(), "四番", Toast.LENGTH_SHORT).show();
-        } else if (bmi >= 18 && bmi < 25) {
-            im1.setImageResource(R.drawable.yoga);
-            Toast.makeText(getActivity(), "五番", Toast.LENGTH_SHORT).show();
-        } */else {
-            imageView.setImageResource(R.drawable.no1);
+    /*前の月、週に移動*/
+    private void LastGraphDisplay() {
+        Calendar cl = Calendar.getInstance();
+        cl.set(Calendar.YEAR, 2020);
+        cl.set(Calendar.DATE, cl.get(Calendar.DATE) + ButtonCount);
+        month = (cl.get(Calendar.MONTH) + 1);
+        week = cl.get(Calendar.DATE);
+
+        // X軸の値
+        ArrayList<String> xValues = new ArrayList<>();
+
+        //1週間の日数分表示
+        for (int i = 0; i < 7; i++) {
+            if (i == 0) {
+                date[i] = (month) + "/" + ((week - 5) + (ButtonCount * 7)) + "日";
+                xValues.add((date[i]));
+            } else {
+                date[i] = ((week + dayCount++) + (ButtonCount * 7)) + "日";
+                xValues.add((date[i]));
+            }
         }
-    }
 
-    /*
-    目標体重変更メソッド
-     */
-    private  void target_change() {
+        dayCount = -4;
+
+        /*// X軸の値
+        SimpleDateFormat sdf = new SimpleDateFormat("dd");
+        Calendar calendar = Calendar.getInstance();
+        int n = 0;
+        int day = 0;
+
+        for (int i = -5; i <= 1; i++) {
+            calendar.add(Calendar.DATE, i);
+            date2[n] = calendar.getTime();
+            calendar.add(Calendar.DATE, -i);
+            date[n] = sdf.format(date2[n++]) + "日";
+        }*/
+
+        // Y軸の設定
+        {
+            YAxis leftAxis = lineChart.getAxisLeft();
+            YAxis rightAxis = lineChart.getAxisRight();
+            //データの値でY軸が変更される
+            leftAxis.setStartAtZero(false);
+            //Y軸の最大最小を決める
+            leftAxis.setAxisMaxValue(120);
+            leftAxis.setAxisMinValue(20);
+            //Y軸の間隔
+            leftAxis.setLabelCount(11, true);
+            //右にはY軸いらないから消す
+            rightAxis.setEnabled(false);
+        }
+
+        //グラフに値を追加
+        ArrayList<LineDataSet> dataSets = new ArrayList<>();
+
+        //体重
+        ArrayList<Entry> value = new ArrayList<>();
+        LineDataSet valueDataSet = new LineDataSet(value, "体重");
+
+        for (int j = 0; j < 6; j++) {
+            value.add(new Entry(data[j], j));
+        }
+        valueDataSet.setColor(Color.rgb(0, 220, 180));
+        valueDataSet.setValueTextSize(10f);
+
+        //目標体重の線
+        ArrayList<Entry> yVals2 = new ArrayList<Entry>();
+        LineDataSet set2 = new LineDataSet(yVals2, "目標");
 
         for (int i = 0; i < goal.length; i++) {
-            goal[i]  = goal[i];
+            yVals2.add(new Entry(goal[i], i));
         }
+        set2.setColor(Color.rgb(164, 0, 0));
+        set2.setValueTextSize(0f);
+
+
+        //予測体重の線
+        ArrayList<Entry> yosoku2 = new ArrayList<Entry>();
+        LineDataSet set3 = new LineDataSet(yosoku2, "予測");
+
+        for (int m = 0; m <= 4; m++) {
+            yosoku[m] = data[m];
+        }
+        yosoku[6] = tomorrow_weight;
+
+        for (int k = 0; k < yosoku.length; k++) {
+            yosoku2.add(new Entry(yosoku[k], k));
+        }
+        set3.setColor(Color.rgb(250, 180, 0));
+        set3.setValueTextSize(0f);
+
+        valueDataSet.setDrawFilled(false);//グラフの塗りつぶしをするかしないか
+
+        dataSets.add(set2);
+        dataSets.add(set3);
+        dataSets.add(valueDataSet);
+
+        lineChart.setData(new LineData(xValues, dataSets));
     }
-
-    /*
-    次の日の体重予測
-    */
-    private void tomorrow(){
-
-        /////摂取と消費
-        meal = 1;
-        training = -69900;//-69900kcal消費していたら明日10kg減る
-        ////
-
-        xKcal = meal + (training);
-        ingestion = xKcal / 6990;
-
-        tomorrow_weight = weight + ((int)ingestion);
-    }
-
-    /*
-    体重記録するときのDBInsert
-    */
-    private void databaseInsert(){
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        Calendar calendar = Calendar.getInstance();
-        String toDay = sdf.format(calendar.getTime());//今日の日付をString型で格納
-
-        //データベースヘルパーオブジェクト生成
-        DatabaseHelper helper = new DatabaseHelper(getContext());
-        //データベース接続オブジェクト生成
-        SQLiteDatabase db = helper.getWritableDatabase();
-
-        try{
-            //まずは選択された運動のメモデータ削除。その後インサート
-            //削除用SQL文用意
-            String sqlDelete = "DELETE FROM weightdb WHERE date = ?";
-            //SQL文を元にプリペアステートメントを取得
-            SQLiteStatement stmt = db.compileStatement(sqlDelete);
-            //変数バインド
-            stmt.bindString(1, toDay);
-            //SQL実行
-            stmt.executeUpdateDelete();
-
-            //インサート文
-            String sqlInsert = "INSERT INTO weightDb(date, weight) VALUES(?,?)";//weight以外は他のページからとりたい
-            //プリペアステートメント所得
-            stmt = db.compileStatement(sqlInsert);
-            //変数バインド
-            stmt.bindString(1, toDay);//(今)
-            stmt.bindLong(2, weight);//60
-            //SQL実行
-            stmt.executeInsert();
-
-        }
-        finally {
-            //データベース接続オブジェクト開放
-            db.close();
-        }
-
-    }
-
-    /*
-    DBのデータを取ってきてグラフに渡す
-     */
-     /*private  void databeseSelect(){
-        //データベースヘルパーオブジェクト生成
-        DatabaseHelper helper = new DatabaseHelper(getContext());
-        //データベース接続オブジェクト生成
-        SQLiteDatabase db = helper.getWritableDatabase();
-
-        //SQL文作成
-        String sql = "SELECT * FROM weightdb";
-        //where date BETWEEN TO_DATE(NOW()-INTERVAL 5DAY, 'YYYY/MM/DD')
-        // AND TO_DATE(NOW(), 'YYYY/MM/DD');"
-        // AND TO_DATE('2017-6-30', 'YYYY/MM/DD');"
-        //データ取得
-        Cursor c = db.rawQuery(sql, null);
-
-        int loop = 0;
-
-        //Coursor型ｃに入っているデータを順番に取り出す
-        while (c.moveToNext()){
-　　　      //getColumnIndexの引数は列の名前
-            date[loop++] = c.getString(c.getColumnIndex("date"));
-            weight = c.getInt(c.getColumnIndex("weight"));
-        }
-    }*/
-
-
 }
-
-
-

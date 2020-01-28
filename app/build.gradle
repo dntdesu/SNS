@@ -57,3 +57,7 @@ repositories {
 dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.5'
 }
+
+dependencies {
+    implementation 'com.google.firebase:firebase-core:16.0.4'
+}
